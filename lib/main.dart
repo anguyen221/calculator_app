@@ -4,6 +4,7 @@ void main() {
   runApp(const CalculatorApp());
 }
 
+// Main application
 class CalculatorApp extends StatelessWidget {
   const CalculatorApp({super.key});
 
@@ -16,6 +17,8 @@ class CalculatorApp extends StatelessWidget {
   }
 }
 
+
+// Stateful widget to manage calculator
 class CalculatorScreen extends StatefulWidget {
   const CalculatorScreen({super.key});
 
@@ -26,27 +29,34 @@ class CalculatorScreen extends StatefulWidget {
 class CalculatorScreenState extends State<CalculatorScreen> {
   String input = "";
 
+  // Handles button presses
   void onButtonPressed(String value) {
   setState(() {
+    // Clears input if C
     if (value == "C") {
       input = "";
+    // Evaluates expression if =
     } else if (value == "=") {
       try {
         input = evaluateExpression(input);
       } catch (e) {
         input = "Error";
       }
+    // Otherwise, appends input for numbers and operations
     } else {
       input += value;
     }
   });
 }
 
+// Evaluates expressions with two operands
 String evaluateExpression(String expression) {
   try {
+    // Uses RegExp to get numbers and operators
     RegExp regex = RegExp(r'(\d+\.?\d*)|([+\-*/])');
     List<String> tokens = regex.allMatches(expression).map((m) => m.group(0)!).toList();
 
+    // Returns if the input is incomplete
     if (tokens.length < 3) return expression;
 
     double num1 = double.parse(tokens[0]);
@@ -68,6 +78,7 @@ String evaluateExpression(String expression) {
   }
 }
 
+  // Builds calculator button
   Widget buildButton(String text) {
     return Expanded(
       child: ElevatedButton(
@@ -77,6 +88,7 @@ String evaluateExpression(String expression) {
     );
   }
 
+  // User interface of app
   @override
   Widget build(BuildContext context) {
     return Scaffold(
