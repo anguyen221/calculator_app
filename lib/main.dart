@@ -27,10 +27,43 @@ class CalculatorScreenState extends State<CalculatorScreen> {
   String input = "";
 
   void onButtonPressed(String value) {
-    setState(() {
+  setState(() {
+    if (value == "C") {
+      input = "";
+    } else if (value == "=") {
+      try {
+        input = evaluateExpression(input);
+      } catch (e) {
+        input = "Error";
+      }
+    } else {
       input += value;
-    });
+    }
+  });
+}
+
+String evaluateExpression(String expression) {
+  try {
+    List<String> tokens = expression.split(RegExp(r'([+\-*/])'));
+    if (tokens.length < 3) return expression;
+    double num1 = double.parse(tokens[0]);
+    String operator = tokens[1];
+    double num2 = double.parse(tokens[2]);
+
+    double result;
+    switch (operator) {
+      case '+': result = num1 + num2; break;
+      case '-': result = num1 - num2; break;
+      case '*': result = num1 * num2; break;
+      case '/': result = num2 == 0 ? double.nan : num1 / num2; break;
+      default: return "Error";
+    }
+
+    return result.toString();
+  } catch (e) {
+    return "Error";
   }
+}
 
   Widget buildButton(String text) {
     return Expanded(
