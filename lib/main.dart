@@ -44,8 +44,11 @@ class CalculatorScreenState extends State<CalculatorScreen> {
 
 String evaluateExpression(String expression) {
   try {
-    List<String> tokens = expression.split(RegExp(r'([+\-*/])'));
+    RegExp regex = RegExp(r'(\d+\.?\d*)|([+\-*/])');
+    List<String> tokens = regex.allMatches(expression).map((m) => m.group(0)!).toList();
+
     if (tokens.length < 3) return expression;
+
     double num1 = double.parse(tokens[0]);
     String operator = tokens[1];
     double num2 = double.parse(tokens[2]);
@@ -55,7 +58,7 @@ String evaluateExpression(String expression) {
       case '+': result = num1 + num2; break;
       case '-': result = num1 - num2; break;
       case '*': result = num1 * num2; break;
-      case '/': result = num2 == 0 ? double.nan : num1 / num2; break;
+      case '/': result = num2 == 0 ? throw Exception("Cannot divide by zero") : num1 / num2; break;
       default: return "Error";
     }
 
